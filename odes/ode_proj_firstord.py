@@ -7,6 +7,8 @@ from __future__ import print_function
 import pickle
 import numpy as np
 from nash_cournot import NashCournot
+from harmonic_oscillator import HarmonicOscillator
+from rps import RPS
 from scipy.integrate import odeint
 
 
@@ -34,10 +36,17 @@ def main():
   t_len = 1000
   pt_cnt = 5000
   
-  prob_inst = NashCournot()
+  prob_inst_dict = {
+    'nash_corunot': NashCournot,
+    'harmonic_oscillator': HarmonicOscillator,
+    'rps': RPS,
+  }
+
+  prob_inst_str = "rps"
+  prob_inst = prob_inst_dict[prob_inst_str]()
   sol = prob_inst.compute_ne().reshape((1, -1))
   
-  data_save_path = './pkl/proj_{}_{}.pkl'
+  data_save_path = './pkl/proj_{}_{}_{}.pkl'
   
   # Trails
   param_list = [(0.2, 0.2), (0.5, 0.5), (1, 1)]
@@ -48,8 +57,8 @@ def main():
     diff = traject - sol
     diff_norm = np.linalg.norm(diff, axis=1, ord=2)
     print(diff_norm)
-    save_dict = {'diff_norm': diff_norm}
-    with open(data_save_path.format(param_lambda, param_alpha), 'wb') as pkl_writer:
+    save_dict = {'diff_norm': diff_norm, 'traject': traject}
+    with open(data_save_path.format(prob_inst_str, param_lambda, param_alpha), 'wb') as pkl_writer:
       pickle.dump(save_dict, pkl_writer)
 
 

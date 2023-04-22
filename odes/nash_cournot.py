@@ -86,8 +86,6 @@ class NashCournot(object):
       logging.warning("ArpackError detected: try skip this iterate")
       return cur_vec
 
-
-
   def project(self, state_vec):
     
     res_vec = np.maximum(state_vec, 0)
